@@ -1,6 +1,12 @@
 import data from "../assets/data";
+import { useCart } from "../context/cartContext";
+import { useMenu } from "../context/menuContext";
 
-function Cart({ menu, cart, setCart }) {
+function Cart() {
+  // useContext에서 menu,cart 값 불러오기
+  const { menu } = useMenu();
+  const { cart } = useCart();
+
   if (!menu)
     return (
       <div style={{ textAlign: "center", margin: "80px" }}>
@@ -19,8 +25,6 @@ function Cart({ menu, cart, setCart }) {
               item={allMenus.find((menu) => menu.id === el.id)}
               options={el.options}
               quantity={el.quantity}
-              cart={cart}
-              setCart={setCart}
             />
           ))
         ) : (
@@ -31,7 +35,11 @@ function Cart({ menu, cart, setCart }) {
   );
 }
 
-function CartItem({ item, options, quantity, cart, setCart }) {
+function CartItem({ item, options, quantity }) {
+  // useContext에서 장바구니 상품 제거 메소드 불러오기
+
+  const { removeFromCart } = useCart();
+
   return (
     <li className="cart-item">
       <div className="cart-item-info">
@@ -48,9 +56,7 @@ function CartItem({ item, options, quantity, cart, setCart }) {
       </div>
       <button
         className="cart-item-delete"
-        onClick={() => {
-          setCart(cart.filter((el) => item.id !== el.id));
-        }}
+        onClick={() => removeFromCart(item.id)}
       >
         삭제
       </button>
